@@ -1,45 +1,105 @@
 #include "Book.hpp"
 
-void    PhonePrompt(void)
+void PhonePrompt(void)
 {
+    PrintOut(_BLU, false);
     PrintOut("----------------------------------", true);
-    PrintOut("|     Welcome To Phone Menu      |", true);
+
+    PrintOut("|  📞  ", false);
+    PrintOut(_GRN, false);
+    PrintOut("Welcome To Phone Menu", false);
+    PrintOut(_BLU, false);
+    PrintOut("     |", true);
+
     PrintOut("----------------------------------", true);
     PrintOut("----------------------------------", true);
-    PrintOut("|      ADD | SEARCH | EXIT       |", true);
+
+    PrintOut("|  📝   ", false);
+    PrintOut(_BLU, false);
+    PrintOut("ADD", false);
+    PrintOut(_BLU, false);
+    PrintOut(" | ", false);
+    PrintOut(_ORG, false);
+    PrintOut("SEARCH", false);
+    PrintOut(_BLU, false);
+    PrintOut(" | ", false);
+    PrintOut(_RED, false);
+    PrintOut("EXIT", false);
+    PrintOut(_BLU, false);
+    PrintOut("      |", true);
+
     PrintOut("----------------------------------", true);
     PrintOut("----------------------------------", true);
-    PrintOut("|       Enter A COMMAND          |", true);
-    PrintOut("----------------------------------", true);
+
+    PrintOut("|  💬    ", false);
+    PrintOut(_GRN, false);
+    PrintOut("Enter A COMMAND", false);
+    PrintOut(_BLU, false);
+    PrintOut("         |", true);
+
+    PrintOut("----------------------------------", false);
+    PrintOut(_RST, true);
 }
 
-void    AddContact(PhoneBook &pb)
+
+bool    safe_getline(std::string &input_ref)
+{
+    if (!std::getline(std::cin, input_ref))
+    {
+        std::cout << std::endl;
+        return (false);
+    }
+    return (true);
+}
+
+void AddContact(PhoneBook &pb)
 {
     std::string input;
     Contact new_contact;
 
     PrintOut("Enter First Name: ", false);
-    std::getline(std::cin, input);
-    new_contact.SetFirstName(input);
+    if (!safe_getline(input) || input.empty()) 
+        return;
+    if (ValidateName(input, 0))
+        new_contact.SetFirstName(input);
+    else
+        return ;
 
     PrintOut("Enter Last Name: ", false);
-    std::getline(std::cin, input);
-    new_contact.SetLastName(input);
+    if (!safe_getline(input) || input.empty()) 
+        return ;
+    if (ValidateName(input, 0))
+        new_contact.SetLastName(input);
+    else
+        return ;
 
     PrintOut("Enter Nickname: ", false);
-    std::getline(std::cin, input);
-    new_contact.SetNickName(input);
+    if (!safe_getline(input) || input.empty())
+        return;
+    if (ValidateName(input, 1))
+        new_contact.SetNickName(input);
+    else
+        return ;
 
     PrintOut("Enter Phone Number: ", false);
-    std::getline(std::cin, input);
-    new_contact.SetPhoneNumber(input);
+    if (!safe_getline(input) || input.empty())
+        return;
+    if (ValidateNumber(input))
+        new_contact.SetPhoneNumber(input);
+    else
+        return ;
 
     PrintOut("Enter Darkest Secret: ", false);
-    std::getline(std::cin, input);
-    new_contact.SetDarkestSecret(input);
+    if (!safe_getline(input) || input.empty())
+        return;
+    if (ValidateName(input, 2))
+        new_contact.SetDarkestSecret(input);
+    else
+        return ;
 
     pb.AddContact(new_contact);
 }
+
 
 std::string truncate(std::string str)
 {
@@ -69,7 +129,6 @@ void DisplayContactDetails(Contact &c)
 void SearchContact(PhoneBook &pb)
 {
     int count = pb.GetCount();
-    std::ostringstream stringbuffer;
     std::string idx;
     PrintOut("     Index|First Name| Last Name|  Nickname", true);
 
@@ -78,6 +137,7 @@ void SearchContact(PhoneBook &pb)
         std::string line = "";
 
         // index
+        std::ostringstream stringbuffer;
         stringbuffer << i;
         idx = stringbuffer.str();
         line += std::string(10 - idx.length(), ' ') + idx + "|";
@@ -98,9 +158,10 @@ void SearchContact(PhoneBook &pb)
     }
 
     PrintOut("Enter index to view details: ", false);
-    std::getline(std::cin, idx);
+    if (!safe_getline(idx) || idx.empty())
+        return ;
     int index = toInt(idx);
-    if (index < 0 || index >= count)
+    if (index < 0 || index >= count || !ValidateNumber(idx))
     {
         PrintOut("Invalid index.", true);
         return ;

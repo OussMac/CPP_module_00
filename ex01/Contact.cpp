@@ -2,7 +2,7 @@
 
 Contact::Contact()
 {
-    std::cout << "Contact Created!" << std::endl;
+    // std::cout << "Contact Created!" << std::endl;
     first_name = "";
     last_name = "";
     nickname = "";

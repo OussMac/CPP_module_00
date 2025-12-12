@@ -10,29 +10,34 @@ void    PrintOut(std::string str, bool newline)
     }
 }
 
-void    PhoneBookLoop(PhoneBook &pb)
+static  void CommandPrompt(void)
 {
-    (void)pb;
+    PrintOut(_GRN, false);
+    PrintOut("Command: ", false);
+    PrintOut(_RST, false);
+
+}
+
+void PhoneBookLoop(PhoneBook &pb)
+{
     std::string input;
+
     while (true)
     {
         PhonePrompt();
-        PrintOut("Command: ", false);
-        std::getline(std::cin, input);
-        if (input.empty())
-            break ;
-        if (input == "ADD")
-            AddContact(pb);
-        else if (input == "SEARCH")
-            SearchContact(pb);
-        else if (input == "EXIT")
-            break ;
+        CommandPrompt();
 
-        PrintOut("Your Command is: ", false);
-        PrintOut(input, true);
+        if (!std::getline(std::cin, input))
+            return;
+
+        if (ValidateCmd(input, "add"))
+            AddContact(pb);
+        else if (ValidateCmd(input, "search"))
+            SearchContact(pb);
+        else if (ValidateCmd(input, "exit"))
+            return ;
     }
 }
-
 
 int main(int argc, char *argv[])
 {

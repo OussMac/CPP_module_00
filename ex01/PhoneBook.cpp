@@ -1,7 +1,7 @@
 #include "PhoneBook.hpp"
 
 PhoneBook::PhoneBook(){
-    std::cout << "PhoneBook Created!" << std::endl;
+    // std::cout << "PhoneBook Created!" << std::endl;
     index = 0;
     count = 8;
 }
