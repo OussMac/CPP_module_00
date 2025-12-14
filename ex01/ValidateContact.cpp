@@ -4,8 +4,8 @@ bool ValidateCmd(std::string input, std::string cmd)
 {
     for (size_t i = 0; i < input.length(); i++)
     {
-        if (std::isupper(input[i]))
-            input[i] = std::tolower(input[i]);
+        if (std::islower(input[i]))
+            input[i] = std::toupper(input[i]);
     }
     if (input == cmd)
         return (true);
@@ -20,7 +20,7 @@ bool    ValidateName(std::string &input, int name)
         {
             char c = input[i];
             if (!std::isalpha(c))
-                return (PrintOut("Names should have only a-z A-Z", true), false);
+                return (PrintOut(_RED" ❌ Error: Names should have only a-z A-Z", false), PrintOut(_RST, true), false);
         }
     }
     else if (name == 1)
@@ -29,7 +29,7 @@ bool    ValidateName(std::string &input, int name)
         {
             char c = input[i];
             if (!std::isalpha(c) && !std::isdigit(c))
-                return (PrintOut("Nicknames should have only a-z A-Z 0-9", true), false);
+                return (PrintOut(_RED" ❌ Error: Nicknames should have only a-z A-Z 0-9", false), PrintOut(_RST, true), false);
         }
     }
     else if (name == 2)
@@ -38,7 +38,7 @@ bool    ValidateName(std::string &input, int name)
         {
             char c = input[i];
             if (!std::isalpha(c) && !std::isdigit(c))
-                return (PrintOut("Secret should have only a-z A-Z 0-9", true), false);
+                return (PrintOut(_RED" ❌ Secret should have only a-z A-Z 0-9", false), PrintOut(_RST, true), false);
         }
     }
 
@@ -51,7 +51,7 @@ bool    ValidateNumber(std::string &input)
     {
         char c = input[i];
         if (!std::isdigit(c))
-            return (PrintOut("Number should have only 0-9", true), false);
+            return (PrintOut(_RED" ❌ Number should have only 0-9", false), PrintOut(_RST, true), false);
     }
     return (true);
 }

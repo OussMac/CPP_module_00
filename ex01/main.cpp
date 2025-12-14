@@ -18,24 +18,41 @@ static  void CommandPrompt(void)
 
 }
 
+static void ExitFunction(void)
+{
+    PrintOut(_RED"----------------------------------", true);
+    PrintOut("|     📝 EXITING PHONEBOOK       |", true);
+    PrintOut("----------------------------------", true);
+}
+
 void PhoneBookLoop(PhoneBook &pb)
 {
     std::string input;
 
     while (true)
     {
+        PrintOut(_CLEARSCRN, false);
         PhonePrompt();
         CommandPrompt();
 
         if (!std::getline(std::cin, input))
             return;
 
-        if (ValidateCmd(input, "add"))
-            AddContact(pb);
-        else if (ValidateCmd(input, "search"))
-            SearchContact(pb);
-        else if (ValidateCmd(input, "exit"))
+        if (ValidateCmd(input, "ADD"))
+        {
+            if (AddContact(pb) == EXIT_FAILURE)
+                return ;
+        }
+        else if (ValidateCmd(input, "SEARCH"))
+        {
+            if (SearchContact(pb) == EXIT_FAILURE)
+                return ;
+        }
+        else if (ValidateCmd(input, "EXIT"))
+        {
+            ExitFunction();
             return ;
+        }
     }
 }
 

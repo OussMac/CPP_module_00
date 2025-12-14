@@ -52,52 +52,73 @@ bool    safe_getline(std::string &input_ref)
     return (true);
 }
 
-void AddContact(PhoneBook &pb)
+int ValidationErrorHold(void)
+{
+    PrintOut(_RED" ❌ All fields Must be filled", true);
+    PrintOut(_GRN"Press ENTER to return to Menu...", false);
+    PrintOut(_RST, false);
+    std::string enter;
+    if (!safe_getline(enter))
+        return (EXIT_FAILURE);
+    return (EXIT_SUCCESS);
+}
+
+
+int AddContact(PhoneBook &pb)
 {
     std::string input;
     Contact new_contact;
 
+    PrintOut(_BLU"----------------------------------", true);
+    PrintOut("|       📝 ADD A Contact         |", true);
+    PrintOut("----------------------------------", true);
+
     PrintOut("Enter First Name: ", false);
-    if (!safe_getline(input) || input.empty()) 
-        return;
-    if (ValidateName(input, 0))
+    PrintOut(_RST, false);
+    if (!safe_getline(input)) 
+        return (EXIT_FAILURE);
+    if (!input.empty() && ValidateName(input, 0))
         new_contact.SetFirstName(input);
     else
-        return ;
-
-    PrintOut("Enter Last Name: ", false);
-    if (!safe_getline(input) || input.empty()) 
-        return ;
-    if (ValidateName(input, 0))
+        return (ValidationErrorHold());
+    PrintOut(_BLU"Enter Last Name: ", false);
+    PrintOut(_RST, false);
+    if (!safe_getline(input)) 
+        return (EXIT_FAILURE);
+    if (!input.empty() && ValidateName(input, 0))
         new_contact.SetLastName(input);
     else
-        return ;
+        return (ValidationErrorHold());
 
-    PrintOut("Enter Nickname: ", false);
-    if (!safe_getline(input) || input.empty())
-        return;
-    if (ValidateName(input, 1))
+    PrintOut(_BLU"Enter Nickname: ", false);
+    PrintOut(_RST, false);
+    if (!safe_getline(input))
+        return (EXIT_FAILURE);
+    if (!input.empty() && ValidateName(input, 1))
         new_contact.SetNickName(input);
     else
-        return ;
+        return (ValidationErrorHold());
 
-    PrintOut("Enter Phone Number: ", false);
-    if (!safe_getline(input) || input.empty())
-        return;
-    if (ValidateNumber(input))
+    PrintOut(_BLU"Enter Phone Number: ", false);
+    PrintOut(_RST, false);
+    if (!safe_getline(input))
+        return (EXIT_FAILURE);
+    if (!input.empty() && ValidateNumber(input))
         new_contact.SetPhoneNumber(input);
     else
-        return ;
+        return (ValidationErrorHold());
 
-    PrintOut("Enter Darkest Secret: ", false);
-    if (!safe_getline(input) || input.empty())
-        return;
-    if (ValidateName(input, 2))
+    PrintOut(_BLU"Enter Darkest Secret: ", false);
+    PrintOut(_RST, false);
+    if (!safe_getline(input))
+        return (EXIT_FAILURE);
+    if (!input.empty() && ValidateName(input, 2))
         new_contact.SetDarkestSecret(input);
     else
-        return ;
+        return (ValidationErrorHold());
 
     pb.AddContact(new_contact);
+    return (EXIT_SUCCESS);
 }
 
 
@@ -119,54 +140,72 @@ int toInt(const std::string &s)
 
 void DisplayContactDetails(Contact &c)
 {
+    if (c.GetFirstName().empty())
+    {
+        PrintOut(_RED" ❌ Contact is empty.", true);
+        PrintOut(_RST, false);
+        return ;
+    }
+    PrintOut(_YLW"----- Contact Details -----", true);
     PrintOut("First Name: " + c.GetFirstName(), true);
     PrintOut("Last Name: " + c.GetLastName(), true);
     PrintOut("Nickname: " + c.GetNickName(), true);
     PrintOut("Phone Number: " + c.GetPhoneNumber(), true);
     PrintOut("Darkest Secret: " + c.GetDarkestSecret(), true);
+    PrintOut(_RST, false);
 }
 
-void SearchContact(PhoneBook &pb)
+int SearchContact(PhoneBook &pb)
 {
     int count = pb.GetCount();
     std::string idx;
+
+    PrintOut(_ORG"----------------------------------", true);
+    PrintOut("|   📝 Search For Contacts       |", true);
+    PrintOut("----------------------------------", true);
+
     PrintOut("     Index|First Name| Last Name|  Nickname", true);
 
     for (int i = 0; i < count; i++)
     {
         std::string line = "";
 
-        // index
         std::ostringstream stringbuffer;
         stringbuffer << i;
         idx = stringbuffer.str();
         line += std::string(10 - idx.length(), ' ') + idx + "|";
 
-        // first name
         std::string fn = truncate(pb.GetContact(i).GetFirstName());
         line += std::string(10 - fn.length(), ' ') + fn + "|";
 
-        // last name
         std::string ln = truncate(pb.GetContact(i).GetLastName());
         line += std::string(10 - ln.length(), ' ') + ln + "|";
 
-        // nickname
         std::string nn = truncate(pb.GetContact(i).GetNickName());
         line += std::string(10 - nn.length(), ' ') + nn;
 
         PrintOut(line, true);
     }
-
-    PrintOut("Enter index to view details: ", false);
-    if (!safe_getline(idx) || idx.empty())
-        return ;
+    PrintOut(_RST, false);
+    PrintOut(_GRN"Enter index to view details: ", false);
+    PrintOut(_RST, false);
+    if (!safe_getline(idx))
+        return (EXIT_FAILURE);
     int index = toInt(idx);
-    if (index < 0 || index >= count || !ValidateNumber(idx))
+    if (idx.empty() || (index < 0 || index >= count || !ValidateNumber(idx)))
     {
-        PrintOut("Invalid index.", true);
-        return ;
+        PrintOut(_RED" ❌ Invalid index range.", true);
+        PrintOut(_RST, false);
+        return (ValidationErrorHold());
     }
     Contact c = pb.GetContact(index);
-    // Display contact details function
+
     DisplayContactDetails(c);
+
+    PrintOut(_GRN"Press ENTER to return to Menu...", false);
+    PrintOut(_RST, false);
+    std::string enter;
+    if (!safe_getline(enter))
+        return (EXIT_FAILURE);
+    return (EXIT_SUCCESS);
 }

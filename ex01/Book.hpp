@@ -7,6 +7,8 @@
 #include "PhoneBook.hpp"
 #include <sstream>
 
+#define _CLEARSCRN "\033[2J\033[1;1H"
+
 // Regular Colors
 #define _RED   "\033[0;31m"
 #define _GRN   "\033[0;32m"
@@ -19,14 +21,18 @@
 #define _BORG  "\033[1;38;5;208m"
 #define _RST   "\033[0m"
 
+#define EXIT_SUCCESS 0
+#define EXIT_FAILURE 1
+
 void    PhonePrompt(void);
 void    PrintOut(std::string str, bool newline);
-void    AddContact(PhoneBook &pb);
-void    SearchContact(PhoneBook &pb);
+int     AddContact(PhoneBook &pb);
+int     SearchContact(PhoneBook &pb);
 bool    safe_getline(std::string &input_ref);
 bool    ValidateCmd(std::string input, std::string cmd);
 bool    ValidateName(std::string &input, int name);
 bool    ValidateNumber(std::string &input);
+int     ValidationErrorHold(void);
 
 
 #endif
